@@ -119,12 +119,12 @@ public class SensorChangeListener implements SensorEventListener {
                 if (timeOfNow - timeOfLastPeak >= 250
                         && (peakValue - valleyValue >= judgeValue) //参与峰谷阀值计算的阀值，峰谷差值大于该阀值才参与峰谷阀值的计算
                         ) {
-                    timeOfThisPeak = timeOfNow; //防止onStep()可能存在的耗时操作，重新修正下时间
+                    timeOfThisPeak = timeOfNow; //即使没过阀值，但过了修正阀值这个波峰就可以被记录
                     thresholdValue = calculateThreshold(peakValue - valleyValue); //峰谷阀值计算
                 }
             }
+            lastSensorValue = sensorValue;
         }
-        lastSensorValue = sensorValue;
     }
 
     /*
@@ -150,7 +150,7 @@ public class SensorChangeListener implements SensorEventListener {
         }
 
         if (!isUp && lastIsUp //波峰判定
-                && (lastContinueUpCount >= 2 || oldValue >= 20) //防止抖动，持续上升了几次或一次上升了很大 才算作有效波峰
+                && (lastContinueUpCount >= 2 || oldValue >= 20) //防止抖动，持续上升了几次或一次上升了很大，才算作有效波峰
                 ) {
             peakValue = oldValue; //波峰值记录
             return true; //该点是一个波峰
@@ -212,7 +212,7 @@ public class SensorChangeListener implements SensorEventListener {
         for (int i = 0; i < n; i++) {
             ave += value[i];
         }
-        ave = ave / arrayNum;
+        ave = ave / (n * 1.0f);
 
         //梯度化阀值的参数，还需要再调整
         //多判断了就尝试提高阀值，少判断了就尝试降低阀值

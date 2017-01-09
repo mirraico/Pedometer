@@ -31,7 +31,7 @@ public class PedometerService extends Service implements StepListener {
         //注册传感器，注册监听器
         sensorManager.registerListener(sensorChangeListener,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_FASTEST); //越快估计越耗电，但也越精确
+                SensorManager.SENSOR_DELAY_UI); //在我手机上测试UI是最精准的，太快太慢都不好
         //Log.e("PedometerService", "REGISTER SENSOR_LISTENER SUCCESSFULLY");
     }
 
