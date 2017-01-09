@@ -46,7 +46,8 @@ public class MainActivity extends Activity {
     public class PedometerReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            count += 1;
+            int ret = intent.getIntExtra("cnt", 1);
+            count += ret;
             countView.setText(count + "");
         }
     }

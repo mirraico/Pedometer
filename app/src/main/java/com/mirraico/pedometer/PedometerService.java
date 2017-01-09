@@ -37,10 +37,11 @@ public class PedometerService extends Service implements StepListener {
 
     //步数增加后回调，这里发送一个广播通知主界面
     @Override
-    public void onStep() {
-        Log.e("PedometerService", "ADD A STEP");
+    public void onStep(int cnt) {
+        Log.e("PedometerService", "ADD STEP");
         Intent intent = new Intent();
         intent.setAction(PedometerService.ACTION);
+        intent.putExtra("cnt", cnt);
         sendBroadcast(intent);
     }
 

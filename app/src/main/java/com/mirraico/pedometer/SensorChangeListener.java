@@ -107,11 +107,12 @@ public class SensorChangeListener implements SensorEventListener {
                         ) {
                     timeOfThisPeak = timeOfNow;
 
-                    //超过5步开始计步，防止无意义抖动，前5步难得计算了(因为项目中不关注这几步)，想要算的在广播中传值就行了
-                    if (detectValidStep()) {
+                    //超过5步开始计步，防止无意义抖动，前5步会在第5步的时候一起显示
+                    int ret = detectValidStep();
+                    if (ret > 0) {
                         //调用回调函数
                         if (stepListener != null) {
-                            stepListener.onStep();
+                            stepListener.onStep(ret);
                         }
                     }
                 }
@@ -162,21 +163,21 @@ public class SensorChangeListener implements SensorEventListener {
     }
 
     /*
-     * 更新界面的处理，不涉及到算法
-     * 一般在通知更新界面之前，增加下面处理，为了处理无效运动：
      * 1.连续记录5才开始计步
      * 2.例如记录的4步用户停住超过3秒，则前面的记录失效，下次从头开始
      * 3.连续记录了4步用户还在运动，之前的数据才有效
      */
-    private boolean detectValidStep() {
+    private int detectValidStep() {
         boolean valid = false;
         if (timeOfThisPeak - timeOfLastPeak < 3000) {
             stepCount++;
-            valid = stepCount >= 5;
+            if(stepCount > 5) return 1;
+            else if(stepCount == 5) return 5;
+            else return 0;
         } else {
             stepCount = 0;
+            return 0;
         }
-        return valid;
     }
 
     /*
