@@ -212,7 +212,7 @@ public class SensorChangeListener implements SensorEventListener {
         for (int i = 0; i < n; i++) {
             ave += value[i];
         }
-        ave = ave / (n * 1.0f);
+        ave = ave / n;
 
         //梯度化阀值的参数，还需要再调整
         //多判断了就尝试提高阀值，少判断了就尝试降低阀值
